@@ -40,9 +40,11 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-
-# Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
+venv/
+.venv/
+env/
+.env_venv/
 
 # TypeScript cache
 *.tsbuildinfo
@@ -65,9 +67,18 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# dotenv environment variable files and local secrets
 .env
 .env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+.env.test
 !.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -85,9 +96,6 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
 
 # vuepress build output
 .vuepress/dist
@@ -141,3 +149,35 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Python caching & build
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Editor / IDE configuration
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Build and distribution directories
+dist/
+build/
+bin/
+obj/
+
+# Docker volumes and local data
+redis_data/
+mongo_data/
+.docker_volumes/
+db_data/

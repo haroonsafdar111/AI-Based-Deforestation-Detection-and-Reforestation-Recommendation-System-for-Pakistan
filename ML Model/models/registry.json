@@ -1,0 +1,270 @@
+{
+    "random_forest": [
+        {
+            "version": 11,
+            "timestamp": "2026-04-20T00:47:47.789190",
+            "metrics": {
+                "risk_rmse": 0.3086994644444082,
+                "tree_accuracy": 6.780303030303031,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 5,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-04-26T18:19:37.672665",
+            "metrics": {
+                "risk_rmse": 0.310747791717009,
+                "tree_accuracy": 6.9356060606060606,
+                "best_tree_params": {
+                    "rf__n_estimators": 200,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-04-27T05:39:15.270672",
+            "metrics": {
+                "risk_rmse": 0.30446777073165426,
+                "tree_accuracy": 6.708333333333333,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-02T22:34:32.523806",
+            "metrics": {
+                "risk_rmse": 0.3298769874353168,
+                "tree_accuracy": 6.833333333333333,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-04T15:53:39.945659",
+            "metrics": {
+                "risk_rmse": 0.3054294574953478,
+                "tree_accuracy": 6.738636363636363,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-04T18:12:21.379488",
+            "metrics": {
+                "risk_rmse": 0.2970909931685649,
+                "tree_accuracy": 6.363636363636363,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-05T20:51:50.234069",
+            "metrics": {
+                "risk_rmse": 0.31089377434199983,
+                "tree_accuracy": 7.049242424242425,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-10T22:06:07.006203",
+            "metrics": {
+                "risk_rmse": 0.28621481178360725,
+                "tree_accuracy": 6.704545454545455,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-11T14:37:51.332617",
+            "metrics": {
+                "risk_rmse": 0.31112852025210047,
+                "tree_accuracy": 6.556818181818182,
+                "best_tree_params": {
+                    "rf__n_estimators": 200,
+                    "rf__min_samples_split": 5,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-06-13T14:19:13.104420",
+            "metrics": {
+                "risk_rmse": 0.32156254099763315,
+                "tree_accuracy": 6.318181818181818,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 5,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced_subsample"
+                }
+            }
+        }
+    ],
+    "cnn_model": [
+        {
+            "version": 1,
+            "timestamp": "2026-02-26T13:05:53.815747",
+            "metrics": {
+                "cnn_accuracy": 37.5,
+                "classes": [
+                    "background",
+                    "forest",
+                    "loss"
+                ]
+            }
+        }
+    ],
+    "cnn_multispectral": [
+        {
+            "version": 11,
+            "timestamp": "2026-04-19T05:48:32.362834",
+            "metrics": {
+                "cnn_accuracy": 90.625,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 7
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-04-20T00:48:16.961376",
+            "metrics": {
+                "cnn_accuracy": 84.375,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 8
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-04-26T18:20:58.787982",
+            "metrics": {
+                "cnn_accuracy": 96.875,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 12
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-04-27T05:40:05.837711",
+            "metrics": {
+                "cnn_accuracy": 93.75,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 9
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-02T22:34:50.773680",
+            "metrics": {
+                "cnn_accuracy": 84.375,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 5
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-04T15:54:23.211686",
+            "metrics": {
+                "cnn_accuracy": 87.5,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 9
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-04T18:12:48.372969",
+            "metrics": {
+                "cnn_accuracy": 93.75,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 13
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-05T20:52:35.428001",
+            "metrics": {
+                "cnn_accuracy": 84.375,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 7
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-05-11T14:38:22.850814",
+            "metrics": {
+                "cnn_accuracy": 87.5,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 11
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-06-13T14:19:37.885878",
+            "metrics": {
+                "cnn_accuracy": 87.5,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 5
+            }
+        }
+    ]
+}

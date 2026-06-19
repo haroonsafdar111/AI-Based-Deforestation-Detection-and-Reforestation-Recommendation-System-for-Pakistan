@@ -1,0 +1,2 @@
+"Region","Fetch Date","Source API","Avg Temp (°C)","Total Rain (mm)","Avg Humidity (%)","NDVI","LST (°C)","Risk Score","Confidence","Recommended Tree","Reforestation Tips","High Risk Zones","Med Risk Zones","Low Risk Zones","Avg Risk Intensity"
+"Nathia Gali","2026-01-24T08:50:09.304Z","In-Memory Context",25,100,40,0.5,25,0.7299,0.85,"Banyan","Recommended Species: Banyan; Suitability Confidence: 40%",240,0,0,"0.72"
