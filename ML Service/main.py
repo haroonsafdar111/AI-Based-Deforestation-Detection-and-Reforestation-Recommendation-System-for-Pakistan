@@ -13,6 +13,11 @@ from typing import Dict, Any, Optional
 import logging
 import numpy as np
 import time
+from threading import Lock
+import subprocess
+import sys
+import shutil
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,6 +31,7 @@ tree_model = None
 label_encoder = None
 cnn_model = None
 models_loaded = False
+retrain_lock = Lock()
 
 @app.on_event("startup")
 async def startup_event():
@@ -422,6 +428,154 @@ async def predict_cnn(request: InferenceRequest):
         logger.error(f"CNN prediction error: {e}")
         raise HTTPException(status_code=500, detail=f"CNN prediction failed: {str(e)}")
 
+def get_script_path(script_name: str) -> str:
+    # Try absolute path first
+    abs_path = os.path.join("/app/ML Model/scripts", script_name)
+    if os.path.exists(abs_path):
+        return abs_path
+    # Fallback to relative path from this file
+    rel_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "ML Model", "scripts", script_name))
+    if os.path.exists(rel_path):
+        return rel_path
+    raise FileNotFoundError(f"Script {script_name} not found at {abs_path} or {rel_path}")
+
+@app.post("/collect-data")
+async def collect_data():
+    try:
+        script_path = get_script_path("data_collector.py")
+        cwd = os.path.abspath(os.path.join(os.path.dirname(script_path), ".."))
+        logger.info(f"[ML Service] Executing data collector: {script_path}")
+        
+        result = subprocess.run(
+            [sys.executable, script_path],
+            check=True,
+            capture_output=True,
+            text=True,
+            cwd=cwd
+        )
+        
+        logger.info(f"[ML Service] Data collector stdout:\n{result.stdout}")
+        if result.stderr:
+            logger.warning(f"[ML Service] Data collector stderr:\n{result.stderr}")
+            
+        return {
+            "success": True,
+            "message": "Data collection completed",
+            "stdout": result.stdout,
+            "stderr": result.stderr
+        }
+    except subprocess.CalledProcessError as e:
+        error_msg = f"Data collector failed: {e.stderr or str(e)}"
+        logger.error(f"[ML Service] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
+    except Exception as e:
+        error_msg = f"Data collection error: {str(e)}"
+        logger.error(f"[ML Service] {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
+
+@app.post("/retrain")
+async def retrain():
+    if not retrain_lock.acquire(blocking=False):
+        raise HTTPException(
+            status_code=409,
+            detail="Retraining already in progress"
+        )
+        
+    try:
+        steps_completed = []
+        
+        # Step 1: data_collector.py
+        try:
+            script_path = get_script_path("data_collector.py")
+            cwd = os.path.abspath(os.path.join(os.path.dirname(script_path), ".."))
+            logger.info(f"[ML Service] Retrain Step 1: Executing data collector: {script_path}")
+            subprocess.run(
+                [sys.executable, script_path],
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=cwd
+            )
+            steps_completed.append("data collection completed")
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Retrain Step 1 (Data collection) failed: {e.stderr or str(e)}"
+            logger.error(f"[ML Service] {error_msg}")
+            raise HTTPException(status_code=500, detail=error_msg)
+            
+        # Step 2: train_random_forest.py
+        try:
+            script_path = get_script_path("train_random_forest.py")
+            cwd = os.path.abspath(os.path.join(os.path.dirname(script_path), ".."))
+            logger.info(f"[ML Service] Retrain Step 2: Executing RF training: {script_path}")
+            subprocess.run(
+                [sys.executable, script_path],
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=cwd
+            )
+            steps_completed.append("rf training completed")
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Retrain Step 2 (RF training) failed: {e.stderr or str(e)}"
+            logger.error(f"[ML Service] {error_msg}")
+            raise HTTPException(status_code=500, detail=error_msg)
+            
+        # Step 3: train_cnn.py
+        try:
+            script_path = get_script_path("train_cnn.py")
+            cwd = os.path.abspath(os.path.join(os.path.dirname(script_path), ".."))
+            logger.info(f"[ML Service] Retrain Step 3: Executing CNN training: {script_path}")
+            subprocess.run(
+                [sys.executable, script_path],
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=cwd
+            )
+            steps_completed.append("cnn training completed")
+            
+            # Copy cnn_model_multispectral.keras to cnn_model.keras
+            models_dir = os.path.join(cwd, "models")
+            multispectral_path = os.path.join(models_dir, "cnn_model_multispectral.keras")
+            cnn_model_path = os.path.join(models_dir, "cnn_model.keras")
+            if os.path.exists(multispectral_path):
+                shutil.copy2(multispectral_path, cnn_model_path)
+                logger.info(f"[ML Service] Successfully copied {multispectral_path} to {cnn_model_path}")
+            else:
+                logger.warning(f"[ML Service] Expected multispectral model file not found at {multispectral_path}")
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Retrain Step 3 (CNN training) failed: {e.stderr or str(e)}"
+            logger.error(f"[ML Service] {error_msg}")
+            raise HTTPException(status_code=500, detail=error_msg)
+            
+        # Step 4: reload all models in memory
+        try:
+            logger.info("[ML Service] Retrain Step 4: Reloading models in memory...")
+            global rf_model, tree_model, label_encoder, cnn_model
+            rf_model = None
+            tree_model = None
+            label_encoder = None
+            cnn_model = None
+            
+            get_risk_model()
+            get_tree_model()
+            get_label_encoder()
+            get_cnn_model()
+            
+            steps_completed.append("models reloaded")
+        except Exception as e:
+            error_msg = f"Retrain Step 4 (Model reload) failed: {str(e)}"
+            logger.error(f"[ML Service] {error_msg}")
+            raise HTTPException(status_code=500, detail=error_msg)
+            
+        return {
+            "success": True,
+            "steps": steps_completed
+        }
+        
+    finally:
+        retrain_lock.release()
+
 @app.post("/reload-models")
 async def reload_models():
     """Reload models endpoint"""
@@ -431,8 +585,15 @@ async def reload_models():
         tree_model = None
         label_encoder = None
         cnn_model = None
+        
+        get_risk_model()
+        get_tree_model()
+        get_label_encoder()
+        get_cnn_model()
+        
         return {"status": "models reloaded successfully"}
     except Exception as e:
+        logger.error(f"[ML Service] Model reload failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Model reload failed: {str(e)}")
 
 if __name__ == "__main__":

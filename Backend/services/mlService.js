@@ -180,49 +180,27 @@ exports.runCNN = async (data) => {
 // --- Retraining Pipelines ---
 
 exports.runDataCollector = async () => {
-    // data_collector.py does not require input JSON, but our helper expects an arg. Passing empty obj.
-    console.log("Starting Data Collection...");
-    return await runPythonML('scripts/data_collector.py', {});
-};
-
-exports.trainRandomForest = async () => {
-    console.log("Starting Random Forest Training...");
-    return await runPythonML('scripts/train_random_forest.py', {});
-};
-
-exports.trainCNN = async () => {
-    console.log("Starting CNN Training...");
-    return await runPythonML('scripts/train_cnn.py', {});
+    const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+    console.log("Starting Data Collection via FastAPI ML Service...");
+    try {
+        const response = await axios.post(`${ML_SERVICE_URL}/collect-data`);
+        return response.data;
+    } catch (error) {
+        console.error("Data Collection failed via ML microservice:", error.message);
+        throw error;
+    }
 };
 
 exports.retrainModels = async () => {
-    // 1. Collect Data
-    await exports.runDataCollector();
-
-    // 2. Train Models (Sequential)
-    const rfResult = await exports.trainRandomForest();
-    const cnnResult = await exports.trainCNN();
-
-    // 3. Get Version Registry
-    const fs = require('fs');
-    const path = require('path');
-    let registry = {};
+    const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+    console.log("Starting Full Retraining Pipeline via FastAPI ML Service...");
     try {
-        const registryPath = path.join(__dirname, '../../ML Model/models/registry.json');
-        if (fs.existsSync(registryPath)) {
-            registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-        }
-    } catch (e) {
-        console.error("Registry load error:", e);
+        const response = await axios.post(`${ML_SERVICE_URL}/retrain`);
+        return response.data;
+    } catch (error) {
+        console.error("Retraining failed via ML microservice:", error.message);
+        throw error;
     }
-
-    return {
-        success: true,
-        message: "Advanced ML models retrained with Phase 1-3 improvements.",
-        rf_metrics: rfResult,
-        cnn_metrics: cnnResult,
-        registry: registry
-    };
 };
 
 /**
