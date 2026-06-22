@@ -440,7 +440,7 @@ def get_script_path(script_name: str) -> str:
     raise FileNotFoundError(f"Script {script_name} not found at {abs_path} or {rel_path}")
 
 @app.post("/collect-data")
-async def collect_data():
+def collect_data():
     try:
         script_path = get_script_path("data_collector.py")
         cwd = os.path.abspath(os.path.join(os.path.dirname(script_path), ".."))
@@ -474,7 +474,7 @@ async def collect_data():
         raise HTTPException(status_code=500, detail=error_msg)
 
 @app.post("/retrain")
-async def retrain():
+def retrain():
     if not retrain_lock.acquire(blocking=False):
         raise HTTPException(
             status_code=409,

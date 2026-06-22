@@ -2,21 +2,6 @@
     "random_forest": [
         {
             "version": 11,
-            "timestamp": "2026-04-20T00:47:47.789190",
-            "metrics": {
-                "risk_rmse": 0.3086994644444082,
-                "tree_accuracy": 6.780303030303031,
-                "best_tree_params": {
-                    "rf__n_estimators": 300,
-                    "rf__min_samples_split": 5,
-                    "rf__min_samples_leaf": 2,
-                    "rf__max_depth": 15,
-                    "rf__class_weight": "balanced_subsample"
-                }
-            }
-        },
-        {
-            "version": 11,
             "timestamp": "2026-04-26T18:19:37.672665",
             "metrics": {
                 "risk_rmse": 0.310747791717009,
@@ -149,6 +134,21 @@
                     "rf__class_weight": "balanced_subsample"
                 }
             }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-06-22T22:26:41.794755",
+            "metrics": {
+                "risk_rmse": 0.29515573135279344,
+                "tree_accuracy": 6.568181818181819,
+                "best_tree_params": {
+                    "rf__n_estimators": 300,
+                    "rf__min_samples_split": 10,
+                    "rf__min_samples_leaf": 2,
+                    "rf__max_depth": 15,
+                    "rf__class_weight": "balanced"
+                }
+            }
         }
     ],
     "cnn_model": [
@@ -166,16 +166,6 @@
         }
     ],
     "cnn_multispectral": [
-        {
-            "version": 11,
-            "timestamp": "2026-04-19T05:48:32.362834",
-            "metrics": {
-                "cnn_accuracy": 90.625,
-                "channels": 5,
-                "status": "High Fidelity Multispectral Optimization Complete",
-                "epochs_completed": 7
-            }
-        },
         {
             "version": 11,
             "timestamp": "2026-04-20T00:48:16.961376",
@@ -264,6 +254,16 @@
                 "channels": 5,
                 "status": "High Fidelity Multispectral Optimization Complete",
                 "epochs_completed": 5
+            }
+        },
+        {
+            "version": 11,
+            "timestamp": "2026-06-22T22:27:22.176180",
+            "metrics": {
+                "cnn_accuracy": 93.75,
+                "channels": 5,
+                "status": "High Fidelity Multispectral Optimization Complete",
+                "epochs_completed": 6
             }
         }
     ]
