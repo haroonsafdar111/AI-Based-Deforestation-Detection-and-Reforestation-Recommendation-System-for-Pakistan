@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install python3, pip, requests, and python-dotenv for forestTrendService.js (lightweight)
 RUN apk add --no-cache make gcc g++ python3 py3-pip \
-    && pip3 install --break-system-packages requests python-dotenv
+ && pip3 install --break-system-packages requests python-dotenv
 
 # Copy package files
 COPY package*.json ./

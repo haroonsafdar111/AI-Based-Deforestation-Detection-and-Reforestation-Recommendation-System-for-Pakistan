@@ -4,7 +4,7 @@ services:
     image: redis:alpine
     container_name: forestvision-redis
     ports:
-      - "6379:6379"
+      - "6379"
     volumes:
       - redis_data:/data
     restart: always
@@ -16,7 +16,7 @@ services:
       dockerfile: ML Service/Dockerfile
     container_name: forestvision-ml-service
     ports:
-      - "8000:8000"
+      - "8000"
     restart: always
     healthcheck:
       test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" ]
@@ -31,6 +31,8 @@ services:
       context: ./Backend
       dockerfile: Dockerfile
     container_name: forestvision-backend
+    volumes:
+      - ./ML Model:/app/ML Model
     ports:
       - "5000:5000"
     environment:
@@ -40,6 +42,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-${JWT_SECRET}}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - JWT_ACCESS_EXPIRATION=${JWT_ACCESS_EXPIRATION}
+      - JWT_REFRESH_EXPIRATION=${JWT_REFRESH_EXPIRATION}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - ML_SERVICE_URL=http://ml-service:8000
@@ -56,17 +60,25 @@ services:
         condition: service_healthy
     restart: always
 
+
   # React Frontend served via Nginx (Reverse Proxy)
   frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
-    container_name: forestvision-frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    restart: always
+     build:
+        context: ./Frontend
+        dockerfile: Dockerfile
+     container_name: forestvision-frontend
+
+     ports:
+         - "80:80"
+         - "443:443"
+
+     volumes:
+         - /etc/letsencrypt:/etc/letsencrypt:ro
+
+     depends_on:
+         - backend
+
+     restart: always
 
 volumes:
   redis_data:

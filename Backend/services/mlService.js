@@ -59,7 +59,12 @@ const callMLService = async (endpoint, inputData) => {
  */
 const runPythonML = (scriptName, inputData) => {
     return new Promise((resolve, reject) => {
-        const scriptPath = path.join(__dirname, '../../ML Model', scriptName);
+           const scriptPath = path.resolve(
+                  __dirname,
+                  '..',
+                  'ML Model',
+                  scriptName
+            );
         console.log(`[Python ML] Executing script: ${scriptPath}`);
 
         // Use the uv virtual environment Python executable if it exists
